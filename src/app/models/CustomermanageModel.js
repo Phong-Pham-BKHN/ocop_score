@@ -1,4 +1,4 @@
-const connection = require('../../config/db / index')
+const connection = require('../../config/db')
 const CustomermanageController = {
     getAllCustomer: (callback) => {
         const query = 'SELECT * FROM customer';
