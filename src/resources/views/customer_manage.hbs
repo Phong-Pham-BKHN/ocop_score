@@ -1,0 +1,244 @@
+{{> header}}
+
+<div class="content-wrapper">
+    <div class="container-fluid">
+
+  <div class="row" style="max-width: 100%; display: contents;">
+    <ul class="search-customer" style="list-style: none; display:flex; justify-content: space-between; align-items: center;">
+      <li class="nav-item" style="max-width: 50%;">
+      </li>
+      <li>
+        <ul class="import_customer_button" style="list-style: none; display:flex; justify-content: space-between; align-items: center;">
+          <li class="import-file_customer" style="margin-right: 10px;">
+            <input type="file" id="fileInput" style="display: none;">
+            <button id="importFileButton" onclick="document.getElementById('fileInput').click()" style="border-radius: 10px;">Tải lên</button>
+          </li>
+          <li class="import-customer">
+            <div class="action_center">
+              <!-- Button to trigger the form -->
+              <button id="showFormButton">Thêm mới</button>
+              <!-- Modal overlay -->
+              <div class="modal-overlay" id="modalOverlay">
+                  <!-- Modal content -->
+                  <div class="modal-content" style="width: 60%; margin: 0 auto;">
+                    <!-- Form chỉnh sửa thông tin -->
+                    <form id="customerForm" method="POST" action="/customer-manage/create">
+                        <!-- Các trường chỉnh sửa thông tin -->
+                        <div class="card">
+                            <div class="card-title">Thêm chủ thể</div>
+                            <hr>
+                            <form>
+                                <div class="form-group">
+                                <label for="input-6">Tên</label>
+                                <input type="text" class="form-control form-control-rounded" id="input-6" name="customer_name" placeholder="Điền tên của chủ thể">
+                                </div>
+                                <div class="form-group">
+                                <label for="input-7">Số điện thoại</label>
+                                <input type="text" class="form-control form-control-rounded" id="input-7" name="customer_phone" placeholder="Điền số điện thoại của chủ thể">
+                                </div>
+                                <div class="form-group">
+                                <label for="input-8">Địa chỉ</label>
+                                <input type="text" class="form-control form-control-rounded" id="input-8" name="customer_address" placeholder="Điền địa chỉ của chủ thể">
+                                </div>
+                                <div class="form-group py-2">
+                                  <div class="icheck-material-white">
+                                <input type="checkbox" id="user-checkbox2" checked=""/>
+                                <label for="user-checkbox2">Tôi đồng ý với các điều khoản & điều kiện</label>
+                                </div>
+                                </div>
+                                <div class="form-group">
+                                <button type="submit" form="customerForm" class="btn btn-light btn-round px-5"><i class="icon-lock"></i> Lưu</button>
+                              </div>
+                            </form>
+                        </div>
+                    </form>
+                  </div>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+
+	<div class="row" style="display: contents;">
+    <div class="col-lg-6" style="max-width: 100%;">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Danh sách chủ thể</h5>
+          <div class="table-responsive">
+          <table id="myTable" class="table table-hover">
+            <thead>
+              <tr>
+                <th scope="col">Hành động</th>
+                <th scope="col">Mã chủ thể</th>
+                <th scope="col">Chủ thể</th>
+                <th scope="col">Điện thoại</th>
+                <th scope="col">Địa chỉ</th>
+              </tr>
+            </thead>
+            <tbody>
+              {{#each data}}
+              <tr>
+                <th scope="row" style="display: flex;">
+                  <div class="action_center">
+                    <button class="edit-button" onclick="toggleEditForm({{customer_id}})" style="background-color: transparent;
+                    border: none;
+                    cursor: pointer;">
+                      <i class="icon-note" style="font-size: 20px;
+                      color: white; /* Màu của icon */"></i>
+                    </button>
+                    <div id="editForm-{{customer_id}}" style="display: none;">
+                      <!-- Form chỉnh sửa thông tin -->
+                      <form id="editInfoForm">
+                          <!-- Các trường chỉnh sửa thông tin -->
+                          <div class="card">
+                            <div class="card-body">
+                              <div class="card-title">Chỉnh sửa thông tin</div>
+                              <hr>
+                              <form>
+                                  <div class="form-group">
+                                  <label for="input-6 customer-name">Tên</label>
+                                  <input type="text" class="form-control form-control-rounded" value="{{customer_name}}" id="input-6" placeholder="Điền tên của chủ thể">
+                                  </div>
+                                  <div class="form-group">
+                                  <label for="input-7 customer-phone">Số điện thoại</label>
+                                  <input type="text" class="form-control form-control-rounded" value="{{customer_phone}}" id="input-7" placeholder="Điền số điện thoại của chủ thể">
+                                  </div>
+                                  <div class="form-group">
+                                  <label for="input-8 customer-address">Địa chỉ</label>
+                                  <input type="text" class="form-control form-control-rounded" value="{{customer_address}}" id="input-8" placeholder="Điền địa chỉ của chủ thể">
+                                  </div>
+                                  <div class="form-group py-2">
+                                    <div class="icheck-material-white">
+                                  <input type="checkbox" id="user-checkbox2" checked=""/>
+                                  <label for="user-checkbox2">Tôi đồng ý với các điều khoản & điều kiện</label>
+                                  </div>
+                                  </div>
+                                  <div class="form-group">
+                                  <button type="submit" class="btn btn-light btn-round px-5"><i class="icon-lock"></i> Lưu</button>
+                                </div>
+                              </form>
+                            </div>
+                          </div>
+                      </form>
+                    </div>
+                  </div>
+                  <div class="delete_action">
+                    <button class="delete-button" onclick="" style="background-color: transparent; border: none; cursor: pointer;">
+                      <i class="icon-trash" style="font-size: 20px; color:yellow; cursor: pointer;"></i>
+                    </button>
+                  </div>                  
+                </th>
+                <td>{{customer_id}}</td>
+                <td>{{customer_name}}</td>
+                <td>{{customer_phone}}</td>
+                <td>{{customer_address}}</td>
+              </tr>
+              {{else}}
+              <tr>
+                <td colspan="9" class="text-center">Không tìm thấy từ khoá nào</td>
+              </tr>
+              {{/each }}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+	</div><!--End Row-->
+    </div>
+    <!-- End container-fluid-->
+    
+    </div><!--End content-wrapper-->
+
+{{> footer}}
+
+<script>
+    
+
+        function toggleEditForm(rowId) {
+    var editForm = document.getElementById("editForm-" + rowId);
+    
+    if (editForm.style.display === "none") {
+        // Ẩn tất cả các form chỉnh sửa trước khi hiển thị form của hàng được chọn
+        var allEditForms = document.querySelectorAll("[id^='editForm-']");
+        allEditForms.forEach(function(form) {
+            form.style.display = "none";
+        });
+        
+        // Hiển thị form chỉnh sửa của hàng được chọn
+        editForm.style.display = "block";
+        
+        // Cập nhật dữ liệu trong form chỉnh sửa tùy thuộc vào hàng được chọn
+        //var selectedRow = document.getElementById("myTable").rows[rowId];
+        //var rowData = selectedRow.cells;
+        //var inputFields = editForm.getElementsByTagName("input");
+        
+        //for (var i = 1; i < rowData.length; i++) {
+        //  inputFields[i-1].value = rowData[i].innerText;
+        //}
+        //fetchCustomerData(rowId, (error, data_id) => {
+        //  if (error) {
+        //    console.error('Error fetching customer data:', error);
+        //  } else {
+            // Update input fields in the edit form with customer data
+        //    document.getElementById("customer-name").value = data_id.customer_name;
+        //    document.getElementById("customer-phone").value = data_id.customer_phone;
+        //    document.getElementById("customer-address").value = data_id.customer_address;
+        //  }
+        //});
+    } else {
+        editForm.style.display = "none";
+    }
+}
+
+    // Function to show the modal overlay and form when the button is clicked
+    document.getElementById("showFormButton").addEventListener("click", function() {
+        document.getElementById("modalOverlay").style.display = "block";
+    });
+
+    // Function to close the modal if the overlay is clicked outside the form
+    document.getElementById("modalOverlay").addEventListener("click", function(event) {
+        if (event.target === document.getElementById("modalOverlay")) {
+            document.getElementById("modalOverlay").style.display = "none";
+        }
+    });
+
+   $(document).ready(function() {
+        $('#myTable').dataTable()({
+            "paging": true, // Bật tính năng phân trang
+            "lengthChange": true, // Bật tính năng thay đổi số lượng dòng trên mỗi trang
+            "searching": true, // Bật tính năng tìm kiếm
+            "ordering": true, // Bật tính năng sắp xếp
+            "info": true, // Hiển thị thông tin số trang, số dòng trên trang
+            "autoWidth": false, // Tắt tính năng tự động thay đổi kích thước cột
+            "columnDefs": [
+                { "width": "10%", "targets": 0 }, // Cột chỉnh sửa
+                { "width": "10%", "targets": 1 }, // Cột mã chủ thể
+                { "width": "20%", "targets": 2 }, // Cột tên chủ thể
+                { "width": "20%", "targets": 3 }, // Cột điện thoại
+                { "width": "40%", "targets": 4 }, // Cột địa chỉ
+                { "orderable": false, "targets": 0 }
+                // Thêm các cột khác nếu cần
+            ],
+            "language": {
+                "emptyTable":     "Không có dữ liệu",
+                "info":           "Hiển thị _START_ đến _END_ của _TOTAL_ mục",
+                "infoEmpty":      "Hiển thị 0 đến 0 của 0 mục",
+                "infoFiltered":   "(đã lọc từ tổng số _MAX_ mục)",
+                "infoPostFix":    "",
+                "thousands":      ",",
+                "lengthMenu":     "Hiển thị _MENU_ mục",
+                "loadingRecords": "Đang tải...",
+                "processing":     "Đang xử lý...",
+                "search":         "Tìm kiếm:",
+                "zeroRecords":    "Không tìm thấy bản ghi nào phù hợp",
+                "aria": {
+                    "sortAscending":  ": kích hoạt để sắp xếp cột tăng dần",
+                    "sortDescending": ": kích hoạt để sắp xếp cột giảm dần"
+                }
+            }
+            // Các tùy chọn khác nếu cần
+        });
+    });
+    </script>
