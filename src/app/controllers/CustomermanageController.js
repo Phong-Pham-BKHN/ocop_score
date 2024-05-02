@@ -29,7 +29,7 @@ class CustomermanageController {
                         pages: pages,
                     },
                 };
-                console.log(data);
+                
                 res.render('customer_manage', viewData);
             }
         })
@@ -63,7 +63,7 @@ class CustomermanageController {
                         pages: pages,
                     },
                 };
-                console.log(data);
+                
                 res.render('customer_manage', viewData);
             }
         })
@@ -79,7 +79,6 @@ class CustomermanageController {
             customer_phone: customer_phone,
             customer_address: customer_address,
         };
-        console.log(form);
         CustomermanageModel.findCustomer(customer_name, customer_phone, customer_address, (err, results) => {
             if (err) {
                 console.log('Lỗi truy vấn', err);
