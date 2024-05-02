@@ -17,6 +17,11 @@ const CustomermanageController = {
         const query = 'SELECT * FROM customer WHERE customer_name = ? AND customer_phone = ? AND customer_address = ?';
         const values = [customer_name, customer_phone, customer_address];
         connection.query(query, values, callback);
-    },   
+    },
+    updateCustomer: (customer_id, customer, callback) => {
+        const query = 'UPDATE customer SET customer_name = ?, customer_phone = ?, customer_address = ? WHERE customer_id = ?';
+        const values = [customer.customer_name, customer.customer_phone, customer.customer_address, customer_id];
+        connection.query(query, values, callback);
+    }       
 }
 module.exports = CustomermanageController;

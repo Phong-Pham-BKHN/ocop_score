@@ -90,24 +90,24 @@
                     </button>
                     <div id="editForm-{{customer_id}}" style="display: none;">
                       <!-- Form chỉnh sửa thông tin -->
-                      <form id="editInfoForm">
+                      
                           <!-- Các trường chỉnh sửa thông tin -->
                           <div class="card">
                             <div class="card-body">
                               <div class="card-title">Chỉnh sửa thông tin</div>
                               <hr>
-                              <form>
+                              <form id="editInfoForm" method="POST" action="/customer-manage/update">
                                   <div class="form-group">
                                   <label for="input-6 customer-name">Tên</label>
-                                  <input type="text" class="form-control form-control-rounded" value="{{customer_name}}" id="input-6" placeholder="Điền tên của chủ thể">
+                                  <input type="text" class="form-control form-control-rounded" value="{{customer_name}}" name="customer_name" id="input-6" placeholder="Điền tên của chủ thể">
                                   </div>
                                   <div class="form-group">
                                   <label for="input-7 customer-phone">Số điện thoại</label>
-                                  <input type="text" class="form-control form-control-rounded" value="{{customer_phone}}" id="input-7" placeholder="Điền số điện thoại của chủ thể">
+                                  <input type="text" class="form-control form-control-rounded" value="{{customer_phone}}" name="customer_phone" id="input-7" placeholder="Điền số điện thoại của chủ thể">
                                   </div>
                                   <div class="form-group">
                                   <label for="input-8 customer-address">Địa chỉ</label>
-                                  <input type="text" class="form-control form-control-rounded" value="{{customer_address}}" id="input-8" placeholder="Điền địa chỉ của chủ thể">
+                                  <input type="text" class="form-control form-control-rounded" value="{{customer_address}}" name="customer_address" id="input-8" placeholder="Điền địa chỉ của chủ thể">
                                   </div>
                                   <div class="form-group py-2">
                                     <div class="icheck-material-white">
@@ -121,7 +121,7 @@
                               </form>
                             </div>
                           </div>
-                      </form>
+                      
                     </div>
                   </div>
                   <div class="delete_action">

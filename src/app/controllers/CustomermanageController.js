@@ -104,7 +104,49 @@ class CustomermanageController {
 
             }
         })
+    }
 
+    edit(req, res) {
+        const Id = req.params.id;
+        CustomermanageModel.getCustomerbyId(Id, (err, data_id) => {
+            if (err) {
+                console.log('Lỗi truy vấn', err);
+            }
+            else {
+                CustomermanageModel.getAllCustomer((err, data) => {
+                    if (err) {
+                        console.log('Lỗi truy vấn', err);
+                    }
+                    else {
+                        if (err) {
+                            console.log('Lỗi truy vấn', err);
+                        }
+                        else {
+                            res.render('customer_manage', { data: data_id[0], data });
+                        }
+                    }
+                })
+
+            }
+        })
+    }
+
+    update(req, res) {
+        const customer_id = req.params.customer_id; // ID của khách hàng cần cập nhật
+        const { customer_name, customer_phone, customer_address } = req.body; // Thông tin mới của khách hàng
+
+        // Gọi hàm updateCustomer từ model
+        CustomermanageModel.updateCustomer(customer_id, { customer_name, customer_phone, customer_address }, (err, result) => {
+            if (err) {
+                // Xử lý lỗi nếu có
+                console.error('Lỗi khi cập nhật thông tin khách hàng:', err);
+                res.status(500).json({ success: false, message: 'Đã xảy ra lỗi khi cập nhật thông tin khách hàng' });
+            } else {
+                // Trả về kết quả thành công
+                console.log('Thông tin khách hàng đã được cập nhật thành công:', result);
+                res.status(200).json({ success: true, message: 'Thông tin khách hàng đã được cập nhật thành công' });
+            }
+        });
     }
 }
 
