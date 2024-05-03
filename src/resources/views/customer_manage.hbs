@@ -10,8 +10,12 @@
       <li>
         <ul class="import_customer_button" style="list-style: none; display:flex; justify-content: space-between; align-items: center;">
           <li class="import-file_customer" style="margin-right: 10px;">
-            <input type="file" id="fileInput" style="display: none;">
-            <button id="importFileButton" onclick="document.getElementById('fileInput').click()" style="border-radius: 10px;">Tải lên</button>
+           
+           <form id="uploadForm" action="/customer-manage/upload" method="POST" enctype="multipart/form-data">
+              <input type="file" name="file" accept=".xlsx, .xls" id="fileInput" style="display: none;">
+              <button id="importFileButton" type="button" onclick="document.getElementById('fileInput').click()" style="border-radius: 10px;">Tải lên</button>
+          </form>
+
           </li>
           <li class="import-customer">
             <div class="action_center">
@@ -125,7 +129,7 @@
                     </div>
                   </div>
                   <div class="delete_action">
-                    <button class="delete-button" onclick="" style="background-color: transparent; border: none; cursor: pointer;">
+                    <button class="delete-button" data-id={{customer_id}} style="background-color: transparent; border: none; cursor: pointer;">
                       <i class="icon-trash" style="font-size: 20px; color:yellow; cursor: pointer;"></i>
                     </button>
                   </div>                  
@@ -156,41 +160,62 @@
 <script>
     
 
-        function toggleEditForm(rowId) {
-    var editForm = document.getElementById("editForm-" + rowId);
-    
-    if (editForm.style.display === "none") {
-        // Ẩn tất cả các form chỉnh sửa trước khi hiển thị form của hàng được chọn
-        var allEditForms = document.querySelectorAll("[id^='editForm-']");
-        allEditForms.forEach(function(form) {
-            form.style.display = "none";
-        });
-        
-        // Hiển thị form chỉnh sửa của hàng được chọn
-        editForm.style.display = "block";
-        
-        // Cập nhật dữ liệu trong form chỉnh sửa tùy thuộc vào hàng được chọn
-        //var selectedRow = document.getElementById("myTable").rows[rowId];
-        //var rowData = selectedRow.cells;
-        //var inputFields = editForm.getElementsByTagName("input");
-        
-        //for (var i = 1; i < rowData.length; i++) {
-        //  inputFields[i-1].value = rowData[i].innerText;
-        //}
-        //fetchCustomerData(rowId, (error, data_id) => {
-        //  if (error) {
-        //    console.error('Error fetching customer data:', error);
-        //  } else {
-            // Update input fields in the edit form with customer data
-        //    document.getElementById("customer-name").value = data_id.customer_name;
-        //    document.getElementById("customer-phone").value = data_id.customer_phone;
-        //    document.getElementById("customer-address").value = data_id.customer_address;
-        //  }
-        //});
-    } else {
-        editForm.style.display = "none";
+    function toggleEditForm(rowId) {
+      var editForm = document.getElementById("editForm-" + rowId);
+      if (editForm.style.display === "none") {
+          // Ẩn tất cả các form chỉnh sửa trước khi hiển thị form của hàng được chọn
+          var allEditForms = document.querySelectorAll("[id^='editForm-']");
+          allEditForms.forEach(function(form) {
+              form.style.display = "none";
+          });
+          editForm.style.display = "block";
+      } else {
+          editForm.style.display = "none";
+      }
     }
-}
+
+    //Import Button
+    function onclickEdit() {
+        const file = document.getElementById('fileInput').files[0];
+        const formData = new FormData();
+        formData.append('file', file);
+        // formData.append('id', getid);
+        formData.append('customer_name', customer_name);
+        formData.append('customer_phone', customer_phone);
+        formData.append('customer_address', customer_address);
+        formData.append('customer_id', customer_id);
+        
+        fetch(`/customer-manage/upload`, {
+            method: 'PUT',
+            body: formData,
+        })
+            .then(() => {
+                window.location.replace('/customer-manage');
+            })
+    }
+
+    //Delete Function
+    document.querySelectorAll('.delete-button').forEach(button => {
+        button.addEventListener('click', function() {
+            const customerId = this.getAttribute('data-id');
+            if (confirm("Bạn có chắc chắn muốn xóa khách hàng này không?")) {
+              console.log(customerId);
+                fetch(`/customer-manage/${customerId}`, {
+                    method: 'DELETE'
+                }).then(response => {
+                    if (response.ok) {
+                        alert('Khách hàng đã được xóa thành công!');
+                        location.reload(); // Reload trang sau khi xóa
+                    } else {
+                        alert('Đã xảy ra lỗi khi xóa khách hàng!');
+                    }
+                }).catch(error => {
+                    console.error('Lỗi:', error);
+                    alert('Đã xảy ra lỗi khi xóa khách hàng!');
+                });
+            }
+        });
+    });
 
     // Function to show the modal overlay and form when the button is clicked
     document.getElementById("showFormButton").addEventListener("click", function() {

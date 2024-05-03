@@ -1,4 +1,5 @@
-const CustomermanageModel = require('../models/CustomermanageModel')
+const CustomermanageModel = require('../models/CustomermanageModel');
+const xlsx = require('xlsx');
 
 class CustomermanageController {
     index(req, res) {
@@ -86,7 +87,6 @@ class CustomermanageController {
             }
             else {
                 if (results.length === 0) {
-
                     CustomermanageModel.addCustomer(form, (err) => {
                         if (err) {
                             console.log('lỗi truy vấn', err);
@@ -142,13 +142,54 @@ class CustomermanageController {
                 console.error('Lỗi khi cập nhật thông tin khách hàng:', err);
                 res.status(500).json({ success: false, message: 'Đã xảy ra lỗi khi cập nhật thông tin khách hàng' });
             } else {
-                // Trả về kết quả thành công
-                // console.log('Thông tin khách hàng đã được cập nhật thành công:', result);
-                // res.status(200).json({ success: true, message: 'Thông tin khách hàng đã được cập nhật thành công' });
                 res.redirect('back');
             }
         });
     }
+
+    delete(req, res, next) {
+        const customer_id = req.params.id
+        CustomermanageModel.deleteCustomer(customer_id, (err, results) => {
+            if (err) {
+                console.error('Lỗi truy vấn:', err);
+                res.status(500).send('Internal Server Error');
+            } else {
+                if (results.affectedRows === 0) {
+                    res.status(404).send(' not found');
+                } else {
+                    res.redirect('back')
+                }
+            }
+        })
+    }
+
+    upload = (req, res) => {
+        try {
+            const file = req.files.file;
+            if (!file) {
+                return res.status(400).json({ message: 'No file uploaded.' });
+            }
+    
+            const workbook = xlsx.readFile(file.path);
+            const sheetName = workbook.SheetNames[0];
+            const worksheet = workbook.Sheets[sheetName];
+            const data = xlsx.utils.sheet_to_json(worksheet);
+    
+            // Gọi model để xử lý dữ liệu và đẩy vào MySQL
+            CustomermanageModel.uploadFileCustomer(data, (err) => {
+                if (err) {
+                    console.log('Lỗi truy vấn', err);
+                    res.status(500).json({ success: false, message: 'Lỗi truy vấn' });
+                } else {
+                    res.status(200).json({ message: 'File uploaded successfully.' });
+                }
+            });
+        } catch (error) {
+            console.error('Lỗi:', error);
+            res.status(500).json({ message: 'Internal Server Error' });
+        }
+    };
+    
 }
 
 module.exports = new CustomermanageController();
