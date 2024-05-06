@@ -5,15 +5,6 @@ const { engine } = require('express-handlebars');
 const route = require('./routes');
 const db = require('./config/db');
 const bodyParser = require('body-parser');
-const fileUpload = require('express-fileupload');
-const uploadOpts = {
-    useTempFiles: true,
-    tempFileDir: '/tmp/',
-};
-const XLSX = require('xlsx');
-const fs = require('fs');
-const multer = require('multer');
-
 
 const app = express();
 const port = 3000;

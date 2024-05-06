@@ -27,10 +27,5 @@ const CustomermanageController = {
         const query = 'UPDATE customer SET is_deleted = 1 WHERE customer_id = ?';
         connection.query(query, [customer_id], callback);
     },
-    uploadFileCustomer: (data, callback) => {
-        const query = 'INSERT INTO customer (customer_name, customer_phone, customer_address) VALUES ?';
-        const values = data.map(customer => [customer.customer_name, customer.customer_phone, customer.customer_address]);
-        connection.query(query, [values], callback);
-    },
 }
 module.exports = CustomermanageController;

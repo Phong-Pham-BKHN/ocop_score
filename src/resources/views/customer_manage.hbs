@@ -9,14 +9,6 @@
       </li>
       <li>
         <ul class="import_customer_button" style="list-style: none; display:flex; justify-content: space-between; align-items: center;">
-          <li class="import-file_customer" style="margin-right: 10px;">
-           
-           <form id="uploadForm" action="/customer-manage/upload" method="POST" enctype="multipart/form-data">
-              <input type="file" name="file" accept=".xlsx, .xls" id="fileInput" style="display: none;">
-              <button id="importFileButton" type="button" onclick="document.getElementById('fileInput').click()" style="border-radius: 10px;">Tải lên</button>
-          </form>
-
-          </li>
           <li class="import-customer">
             <div class="action_center">
               <!-- Button to trigger the form -->
@@ -174,32 +166,11 @@
       }
     }
 
-    //Import Button
-    function onclickEdit() {
-        const file = document.getElementById('fileInput').files[0];
-        const formData = new FormData();
-        formData.append('file', file);
-        // formData.append('id', getid);
-        formData.append('customer_name', customer_name);
-        formData.append('customer_phone', customer_phone);
-        formData.append('customer_address', customer_address);
-        formData.append('customer_id', customer_id);
-        
-        fetch(`/customer-manage/upload`, {
-            method: 'PUT',
-            body: formData,
-        })
-            .then(() => {
-                window.location.replace('/customer-manage');
-            })
-    }
-
     //Delete Function
     document.querySelectorAll('.delete-button').forEach(button => {
         button.addEventListener('click', function() {
             const customerId = this.getAttribute('data-id');
             if (confirm("Bạn có chắc chắn muốn xóa khách hàng này không?")) {
-              console.log(customerId);
                 fetch(`/customer-manage/${customerId}`, {
                     method: 'DELETE'
                 }).then(response => {
@@ -231,4 +202,5 @@
 
     
     </script>
-    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="/helpers/custom.js"></script>

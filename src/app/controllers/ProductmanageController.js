@@ -1,13 +1,13 @@
-const CustomermanageModel = require('../models/CustomermanageModel');
+const ProductmanageModel = require('../models/ProductmanageModel');
 
-class CustomermanageController {
+class ProductmanageController {
     index(req, res) {
         const page = parseInt(req.query.page) || 1; // Trang hiện tại
         const pageSize = 8; // Kích thước trang
         const startIndex = (page - 1) * pageSize;
         const endIndex = page * pageSize;
         const searchItem = req.query.search || '';
-        CustomermanageModel.getAllCustomer((err, data) =>{
+        ProductmanageModel.getAllProduct((err, data) =>{
             if (err){
                 console.log('Lỗi truy vấn', err)
             } else {
@@ -30,7 +30,7 @@ class CustomermanageController {
                     },
                 };
                 
-                res.render('customer_manage', viewData);
+                res.render('product_manage', viewData);
             }
         })
     }
@@ -41,7 +41,7 @@ class CustomermanageController {
         const startIndex = (page - 1) * pageSize;
         const endIndex = page * pageSize;
         const searchItem = req.query.search || '';
-        CustomermanageModel.getCustomerbyId((err, data_id) =>{
+        ProductmanageModel.getProductbyId((err, data_id) =>{
             if (err){
                 console.log('Lỗi truy vấn', err)
             } else {
@@ -64,29 +64,31 @@ class CustomermanageController {
                     },
                 };
                 
-                res.render('customer_manage', viewData);
+                res.render('product_manage', viewData);
             }
         })
     }
     
     create(req, res) {
-        const customer_name = req.body.customer_name;
-        const customer_phone = req.body.customer_phone;
-        const customer_address = req.body.customer_address;
+        const product_name = req.body.product_name;
+        const product_group = req.body.product_group;
+        const product_year = req.body.product_year;
+        const product_note = req.body.product_note;
 
         const form = {
-            customer_name: customer_name,
-            customer_phone: customer_phone,
-            customer_address: customer_address,
+            product_name: product_name,
+            product_group: product_group,
+            product_year: product_year,
+            product_note: product_note,
         };
-        CustomermanageModel.findCustomer(customer_name, customer_phone, customer_address, (err, results) => {
+        ProductmanageModel.findProduct(product_name, product_group, product_year, product_note, (err, results) => {
             if (err) {
                 console.log('Lỗi truy vấn', err);
                 res.json({ success: false, message: 'Lỗi truy vấn' });
             }
             else {
                 if (results.length === 0) {
-                    CustomermanageModel.addCustomer(form, (err) => {
+                    ProductmanageModel.addProduct(form, (err) => {
                         if (err) {
                             console.log('lỗi truy vấn', err);
                             res.json({ success: false, message: 'Lỗi truy vấn' });
@@ -97,8 +99,8 @@ class CustomermanageController {
                     })
                 }
                 else {
-                    // Nếu khách hàng đã tồn tại, trả về thông báo cho người dùng
-                    res.json({ success: false, message: 'Khách hàng đã tồn tại trong cơ sở dữ liệu' });
+                    // Nếu sản phảm đã tồn tại, trả về thông báo cho người dùng
+                    res.json({ success: false, message: 'Sản phẩm đã tồn tại trong cơ sở dữ liệu' });
                 }
 
             }
@@ -107,12 +109,12 @@ class CustomermanageController {
 
     edit(req, res) {
         const Id = req.params.id;
-        CustomermanageModel.getCustomerbyId(Id, (err, data_id) => {
+        ProductmanageModel.getProductbyId(Id, (err, data_id) => {
             if (err) {
                 console.log('Lỗi truy vấn', err);
             }
             else {
-                CustomermanageModel.getAllCustomer((err, data) => {
+                ProductmanageModel.getAllProduct((err, data) => {
                     if (err) {
                         console.log('Lỗi truy vấn', err);
                     }
@@ -121,7 +123,7 @@ class CustomermanageController {
                             console.log('Lỗi truy vấn', err);
                         }
                         else {
-                            res.render('customer_manage', { data: data_id[0], data });
+                            res.render('Product_manage', { data: data_id[0], data });
                         }
                     }
                 })
@@ -131,15 +133,15 @@ class CustomermanageController {
     }
 
     update(req, res) {
-        const customer_id = req.params.id; // ID của khách hàng cần cập nhật
-        const { customer_name, customer_phone, customer_address } = req.body; // Thông tin mới của khách hàng
+        const product_id = req.params.id; // ID của sản phẩm cần cập nhật
+        const { product_name, product_group, product_year, product_note } = req.body; // Thông tin mới của sản phẩm
 
-        // Gọi hàm updateCustomer từ model
-        CustomermanageModel.updateCustomer(customer_id, { customer_name, customer_phone, customer_address }, (err, result) => {
+        // Gọi hàm updateProduct từ model
+        ProductmanageModel.updateProduct(product_id, { product_name, product_group, product_year, product_note }, (err, result) => {
             if (err) {
                 // Xử lý lỗi nếu có
-                console.error('Lỗi khi cập nhật thông tin khách hàng:', err);
-                res.status(500).json({ success: false, message: 'Đã xảy ra lỗi khi cập nhật thông tin khách hàng' });
+                console.error('Lỗi khi cập nhật thông tin sản phẩm:', err);
+                res.status(500).json({ success: false, message: 'Đã xảy ra lỗi khi cập nhật thông tin sản phẩm' });
             } else {
                 res.redirect('back');
             }
@@ -147,8 +149,8 @@ class CustomermanageController {
     }
 
     delete(req, res, next) {
-        const customer_id = req.params.id
-        CustomermanageModel.deleteCustomer(customer_id, (err, results) => {
+        const product_id = req.params.id
+        ProductmanageModel.deleteProduct(product_id, (err, results) => {
             if (err) {
                 console.error('Lỗi truy vấn:', err);
                 res.status(500).send('Internal Server Error');
@@ -164,4 +166,4 @@ class CustomermanageController {
     
 }
 
-module.exports = new CustomermanageController();
+module.exports = new ProductmanageController();

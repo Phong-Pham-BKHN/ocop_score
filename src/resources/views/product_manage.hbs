@@ -1,0 +1,416 @@
+{{> header}}
+    <div class="content-wrapper">
+    <div class="container-fluid">
+
+  <div class="row" style="max-width: 100%; display: contents;">
+    <ul class="search-customer" style="list-style: none; display:flex; justify-content: space-between; align-items: center;">
+      <li class="nav-item" style="max-width: 50%;">
+      </li>
+          <li class="import-customer">
+            <div class="action_center">
+              <!-- Button to trigger the form -->
+              <button id="showFormButton">Thêm mới</button>
+              <!-- Modal overlay -->
+              <div class="modal-overlay" id="modalOverlay">
+                  <!-- Modal content -->
+                  <div class="modal-content" style="width: 60%; margin: 0 auto;">
+                    <!-- Form chỉnh sửa thông tin -->
+                    
+                        <!-- Các trường chỉnh sửa thông tin -->
+                        <div class="card">
+                            <div class="card-title">Thêm Sản phẩm</div>
+                            <hr>
+                            <form id="customerForm" method="POST" action="/product-manage/create">
+                                <div class="form-group">
+                                <label for="input-6">Tên Sản phẩm</label>
+                                <input type="text" class="form-control form-control-rounded" id="input-6" placeholder="Điền tên của sản phẩm">
+                                </div>
+                                <div class="form-group">
+                                <label for="input-7">Mô tả sản phẩm</label>
+                                <input type="text" class="form-control form-control-rounded" id="input-7" placeholder="Điền mô tả sản phẩm">
+                                </div>
+                                <div class="form-group">
+                                <label for="input-8">Chủ thể</label>
+                                <input type="text" class="form-control form-control-rounded" id="input-8" placeholder="Điền tên chủ thể">
+                                </div>
+                                <div class="form-group">
+                                  <label for="input-9">Nhóm sản phẩm</label>
+                                  <div class="custom-select">
+                                    <select>
+                                      <option value="0">Không lựa chọn</option>
+                                      <option value="1">nhóm 1</option>
+                                      <option value="2">nhóm 2</option>
+                                      <option value="3">nhóm 3</option>
+                                      <option value="4">nhóm 4</option>
+                                      <option value="5">nhóm 5</option>
+                                    </select>
+                                  </div>
+                                </div>
+                                <div class="form-group">
+                                  <label for="input-10">Năm đánh giá</label>
+                                  <!-- <input type="text" class="form-control form-control-rounded" id="input-10" placeholder="Điền năm đánh giá"> -->
+                                  <div class="custom-select-year">
+                                    <select id="yearDP">
+                                      <option value="2012">2012</option>
+                                      <option value="2013">2013</option>
+                                      <option value="2014">2014</option>
+                                      <option value="2015">2015</option>
+                                      <option value="2016">2016</option>
+                                      <option value="2017">2017</option>
+                                      <option value="2018">2018</option>
+                                      <option value="2019">2019</option>
+                                      <option value="2020">2020</option>
+                                      <option value="2021">2021</option>
+                                      <option value="2022">2022</option>
+                                      <option value="2023">2023</option>
+                                      <option value="2024">2024</option>
+                                      <option value="2025">2025</option>
+                                      <option value="2026">2026</option>
+                                  </select>
+                                  </div>
+                                </div>
+                                <div class="form-group">
+                                  <label for="input-11">Ghi chú</label>
+                                  <input type="text" class="form-control form-control-rounded" id="input-11" placeholder="">
+                                </div>
+                                <div class="form-group py-2">
+                                  <div class="icheck-material-white">
+                                <input type="checkbox" id="user-checkbox2" checked=""/>
+                                <label for="user-checkbox2">Tôi đồng ý với các điều khoản & điều kiện</label>
+                                </div>
+                                </div>
+                                <div class="form-group">
+                                <button type="submit" class="btn btn-light btn-round px-5"><i class="icon-lock"></i> Lưu</button>
+                              </div>
+                            </form>
+                        </div>
+                  </div>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+
+	<div class="row" style="display: contents;">
+    <div class="col-lg-6" style="max-width: 100%;">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Danh sách sản phẩm</h5>
+          <div class="table-responsive">
+          <table id="myTable" class="table table-hover">
+            <thead>
+              <tr>
+                <th scope="col">Hành động</th>
+                <th scope="col">Mã sản phẩm</th>
+                <th scope="col">Tên sản phẩm</th>
+                <th scope="col">Nhóm sản phẩm</th>
+                <th scope="col">Năm đánh giá</th>
+                <th scope="col">Ghi chú</th>
+              </tr>
+            </thead>
+            <tbody>
+                {{#each data}}
+              <tr>
+                <th scope="row" style="display: flex;">
+                  <div class="action_center">
+                    <button class="edit-button" onclick="toggleEditForm({{product_id}})" style="background-color: transparent;
+                    border: none;
+                    cursor: pointer;">
+                      <i class="icon-note" style="font-size: 20px;
+                      color: white; /* Màu của icon */"></i>
+                    </button>
+                    <div id="editForm-{{product_id}}" style="display: none;">
+                      <!-- Form chỉnh sửa thông tin -->
+                      
+                          <!-- Các trường chỉnh sửa thông tin -->
+                          <div class="card">
+                            <div class="card-body">
+                              <div class="card-title">Chỉnh sửa thông tin</div>
+                              <hr>
+                              <form id="editInfoForm" method="POST" action="/product-manage/{{product_id}}/update">
+                                  <div class="form-group">
+                                  <label for="input-6">Tên sản phẩm</label>
+                                  <input type="text" class="form-control form-control-rounded" value="{{product_name}}" name="product_name" id="input-6" placeholder="Điền tên của chủ thể">
+                                  </div>
+                                  <div class="form-group">
+                                  <label for="input-7">Nhóm sản phẩm</label>
+                                  <input type="text" class="form-control form-control-rounded" value="{{product_group}}" name="product_group" id="input-7" placeholder="Điền số điện thoại của chủ thể">
+                                  </div>
+                                  <div class="form-group">
+                                  <label for="input-8">Năm đánh giá</label>
+                                  <input type="text" class="form-control form-control-rounded" value="{{product_year}}" name="product_year" id="input-8" placeholder="Điền địa chỉ của chủ thể">
+                                  </div>
+                                  <div class="form-group">
+                                    <label for="input-9">ghi chú</label>
+                                    <input type="text" class="form-control form-control-rounded" value="{{product_note}}" name="product_note" id="input-9" placeholder="Điền địa chỉ của chủ thể">
+                                    </div>
+                                  <div class="form-group py-2">
+                                    <div class="icheck-material-white">
+                                  <input type="checkbox" id="user-checkbox2" checked=""/>
+                                  <label for="user-checkbox2">Tôi đồng ý với các điều khoản & điều kiện</label>
+                                  </div>
+                                  </div>
+                                  <div class="form-group">
+                                  <button type="submit" class="btn btn-light btn-round px-5"><i class="icon-lock"></i> Lưu</button>
+                                </div>
+                              </form>
+                            </div>
+                          </div>
+                    </div>
+                  </div>
+                  <div class="delete_action">
+                    <button class="delete-button" data-id={{product_id}} style="background-color: transparent; border: none; cursor: pointer;">
+                      <i class="icon-trash" style="font-size: 20px; color:yellow; cursor: pointer;"></i>
+                    </button>
+                  </div>                  
+                </th>
+                <td>{{product_id}}</td>
+                <td>{{product_name}}</td>
+                <td>{{product_group}}</td>
+                <td>{{product_year}}</td>
+                <td>{{product_note}}</td>
+              </tr>
+              {{else}}
+              <tr>
+                <td colspan="9" class="text-center">Không tìm thấy từ khoá nào</td>
+              </tr>
+              {{/each }}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+	</div><!--End Row-->
+    </div>
+    <!-- End container-fluid-->
+    
+    </div><!--End content-wrapper-->
+{{> footer}}
+
+<script>
+    
+
+    function toggleEditForm(rowId) {
+      var editForm = document.getElementById("editForm-" + rowId);
+      if (editForm.style.display === "none") {
+          // Ẩn tất cả các form chỉnh sửa trước khi hiển thị form của hàng được chọn
+          var allEditForms = document.querySelectorAll("[id^='editForm-']");
+          allEditForms.forEach(function(form) {
+              form.style.display = "none";
+          });
+          editForm.style.display = "block";
+      } else {
+          editForm.style.display = "none";
+      }
+    }
+
+    //Delete Function
+    document.querySelectorAll('.delete-button').forEach(button => {
+        button.addEventListener('click', function() {
+            const productId = this.getAttribute('data-id');
+            if (confirm("Bạn có chắc chắn muốn xóa sản phẩm này không?")) {
+                fetch(`/product-manage/${productId}`, {
+                    method: 'DELETE'
+                }).then(response => {
+                    if (response.ok) {
+                        alert('Sản phẩm đã được xóa thành công!');
+                        location.reload(); // Reload trang sau khi xóa
+                    } else {
+                        alert('Đã xảy ra lỗi khi xóa sản phẩm!');
+                    }
+                }).catch(error => {
+                    console.error('Lỗi:', error);
+                    alert('Đã xảy ra lỗi khi xóa sản phẩm!');
+                });
+            }
+        });
+    });
+
+    // Function to show the modal overlay and form when the button is clicked
+    document.getElementById("showFormButton").addEventListener("click", function() {
+        document.getElementById("modalOverlay").style.display = "block";
+    });
+
+    // Function to close the modal if the overlay is clicked outside the form
+    document.getElementById("modalOverlay").addEventListener("click", function(event) {
+        if (event.target === document.getElementById("modalOverlay")) {
+            document.getElementById("modalOverlay").style.display = "none";
+        }
+    });
+
+     //Function of selection box
+    var x, i, j, l, ll, selElmnt, a, b, c;
+    /*look for any elements with the class "custom-select":*/
+    x = document.getElementsByClassName("custom-select");
+    l = x.length;
+    for (i = 0; i < l; i++) {
+      selElmnt = x[i].getElementsByTagName("select")[0];
+      ll = selElmnt.length;
+      /*for each element, create a new DIV that will act as the selected item:*/
+      a = document.createElement("DIV");
+      a.setAttribute("class", "select-selected");
+      a.innerHTML = selElmnt.options[selElmnt.selectedIndex].innerHTML;
+      x[i].appendChild(a);
+      /*for each element, create a new DIV that will contain the option list:*/
+      b = document.createElement("DIV");
+      b.setAttribute("class", "select-items select-hide");
+      for (j = 1; j < ll; j++) {
+        /*for each option in the original select element,
+        create a new DIV that will act as an option item:*/
+        c = document.createElement("DIV");
+        c.innerHTML = selElmnt.options[j].innerHTML;
+        c.addEventListener("click", function(e) {
+            /*when an item is clicked, update the original select box,
+            and the selected item:*/
+            var y, i, k, s, h, sl, yl;
+            s = this.parentNode.parentNode.getElementsByTagName("select")[0];
+            sl = s.length;
+            h = this.parentNode.previousSibling;
+            for (i = 0; i < sl; i++) {
+              if (s.options[i].innerHTML == this.innerHTML) {
+                s.selectedIndex = i;
+                h.innerHTML = this.innerHTML;
+                y = this.parentNode.getElementsByClassName("same-as-selected");
+                yl = y.length;
+                for (k = 0; k < yl; k++) {
+                  y[k].removeAttribute("class");
+                }
+                this.setAttribute("class", "same-as-selected");
+                break;
+              }
+            }
+            h.click();
+        });
+        b.appendChild(c);
+      }
+      x[i].appendChild(b);
+      a.addEventListener("click", function(e) {
+          /*when the select box is clicked, close any other select boxes,
+          and open/close the current select box:*/
+          e.stopPropagation();
+          closeAllSelect(this);
+          this.nextSibling.classList.toggle("select-hide");
+          this.classList.toggle("select-arrow-active");
+        });
+    }
+    function closeAllSelect(elmnt) {
+      /*a function that will close all select boxes in the document,
+      except the current select box:*/
+      var x, y, i, xl, yl, arrNo = [];
+      x = document.getElementsByClassName("select-items");
+      y = document.getElementsByClassName("select-selected");
+      xl = x.length;
+      yl = y.length;
+      for (i = 0; i < yl; i++) {
+        if (elmnt == y[i]) {
+          arrNo.push(i)
+        } else {
+          y[i].classList.remove("select-arrow-active");
+        }
+      }
+      for (i = 0; i < xl; i++) {
+        if (arrNo.indexOf(i)) {
+          x[i].classList.add("select-hide");
+        }
+      }
+    }
+    /*if the user clicks anywhere outside the select box,
+    then close all select boxes:*/
+    document.addEventListener("click", closeAllSelect);
+
+
+    //Function of selection box year test
+    var x, i, j, l, ll, selElmnt, a, b, c;
+    /*look for any elements with the class "custom-select":*/
+    x = document.getElementsByClassName("custom-select-year");
+    l = x.length;
+    for (i = 0; i < l; i++) {
+      selElmnt = x[i].getElementsByTagName("select")[0];
+      ll = selElmnt.length;
+      /*for each element, create a new DIV that will act as the selected item:*/
+      a = document.createElement("DIV");
+      a.setAttribute("class", "select-selected");
+      // Set default selected option to current year
+      var currentYear = new Date().getFullYear();
+      for (var k = 0; k < ll; k++) {
+        if (selElmnt.options[k].value == currentYear) {
+          selElmnt.selectedIndex = k;
+          a.innerHTML = selElmnt.options[k].innerHTML;
+          break;
+        }
+      }
+      if (a.innerHTML === "") {
+        a.innerHTML = selElmnt.options[0].innerHTML;
+      }
+      x[i].appendChild(a);
+      /*for each element, create a new DIV that will contain the option list:*/
+      b = document.createElement("DIV");
+      b.setAttribute("class", "select-items select-hide");
+      for (j = 1; j < ll; j++) {
+        /*for each option in the original select element,
+        create a new DIV that will act as an option item:*/
+        c = document.createElement("DIV");
+        c.innerHTML = selElmnt.options[j].innerHTML;
+        c.addEventListener("click", function(e) {
+          /*when an item is clicked, update the original select box,
+          and the selected item:*/
+          var y, i, k, s, h, sl, yl;
+          s = this.parentNode.parentNode.getElementsByTagName("select")[0];
+          sl = s.length;
+          h = this.parentNode.previousSibling;
+          for (i = 0; i < sl; i++) {
+            if (s.options[i].innerHTML == this.innerHTML) {
+              s.selectedIndex = i;
+              h.innerHTML = this.innerHTML;
+              y = this.parentNode.getElementsByClassName("same-as-selected");
+              yl = y.length;
+              for (k = 0; k < yl; k++) {
+                y[k].removeAttribute("class");
+              }
+              this.setAttribute("class", "same-as-selected");
+              break;
+            }
+          }
+          h.click();
+        });
+        b.appendChild(c);
+      }
+      x[i].appendChild(b);
+      a.addEventListener("click", function(e) {
+        /*when the select box is clicked, close any other select boxes,
+        and open/close the current select box:*/
+        e.stopPropagation();
+        closeAllSelect(this);
+        this.nextSibling.classList.toggle("select-hide");
+        this.classList.toggle("select-arrow-active");
+      });
+    }
+    function closeAllSelect(elmnt) {
+      /*a function that will close all select boxes in the document,
+      except the current select box:*/
+      var x, y, i, xl, yl, arrNo = [];
+      x = document.getElementsByClassName("select-items");
+      y = document.getElementsByClassName("select-selected");
+      xl = x.length;
+      yl = y.length;
+      for (i = 0; i < yl; i++) {
+        if (elmnt == y[i]) {
+          arrNo.push(i)
+        } else {
+          y[i].classList.remove("select-arrow-active");
+        }
+      }
+      for (i = 0; i < xl; i++) {
+        if (arrNo.indexOf(i)) {
+          x[i].classList.add("select-hide");
+        }
+      }
+    }
+    /*if the user clicks anywhere outside the select box,
+    then close all select boxes:*/
+    document.addEventListener("click", closeAllSelect);
+    </script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="/helpers/custom-product.js"></script>
